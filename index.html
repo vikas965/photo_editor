@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Image Editor</title>
+</head>
+<body>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    display: grid;
+   	grid-template-columns: 1fr 1fr;
+    
+}
+.form-container {
+	/* width: 100%; */
+    /* overflow-y: hidden; */
+    height: 100vh;
+	padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:flex-start;
+    row-gap: 6%;
+	/* background-color: #7b2cbf; */
+    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+    background: black;
+	/* display: flex; */
+   	/* justify-content: center; */
+    padding-top: 10px;
+    padding-left: 2%;
+    box-shadow: rgba(18, 18, 28, 0.25) 0px 30px 60px -12px inset, rgba(109, 69, 69, 0.721) 0px 18px 36px -18px inset;
+    /* border: solid 2px white; */
+	/* align-items: center; */
+    
+}
+
+.image img{
+    width: 350px;
+    height: 350px;
+    border-radius: 6px;
+    
+           /* Apply a 5px blur */
+     /* Increase brightness to 150% */
+    /* Increase contrast to 200% */
+       /* Apply 50% grayscale */
+     /* Rotate hue by 90 degrees (changing colors) */
+        /* Invert colors by 75% */
+        /* Set opacity to 70% */
+    
+}
+
+.image{
+    width: 100%;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+    /* height: 100% */
+    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    
+    /* padding-top: 25px; */
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+    align-items: center;
+    justify-content: flex-start;
+
+    
+}
+.buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.buttons button{
+     width: 160px;
+     height: 40px;
+     border: none;
+     outline: none;
+     background-color: rgba(251, 249, 249, 0.164);
+     color: whitesmoke;
+     border-radius: 4px;
+     text-transform: capitalize;
+     font-size: 18px;
+     box-shadow: rgba(215, 211, 211, 0.25) 0px 54px 55px, rgba(233, 229, 229, 0.12) 0px -12px 30px, rgba(245, 232, 232, 0.09) 0px -3px 5px;
+     cursor: pointer;
+}
+.line{
+    width: 100%;
+    height: 1px;
+    background: black;
+    border-radius: 20px;
+}
+
+.buttons button:hover{
+    border: solid 1px rgb(78, 194, 240);
+}
+
+.file-upload-section{
+    /* margin: auto; */
+    margin-top: 5%;
+    padding: 8px;
+    text-align: center;
+    background-color: #ffffffc4;
+    color: black;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+#foto-file {
+    display: none;
+}
+
+#download{
+    margin-top: 1%;
+    border: none;
+    padding: 8px;
+    text-align: center;
+    background-color: #ffffffc4;
+    color: black;
+    border-radius: 4px;
+    font-size: 18px;
+    cursor: pointer;
+}
+#rota{
+    height: 44px;
+}
+
+#transparent{
+    color: white;
+}
+
+#color-picker ,#colorize-color-picker{
+    display: none;
+}
+
+
+
+    </style>
+    
+  <div class="form-container">
+    
+        <div class="file-upload-section" onclick="selectImage()">
+            <input id="foto-file" type="file">
+            Upload Image
+        </div>
+        <div class="buttons">
+            <button onclick="crop()">Crop</button>
+            <button onclick="flipVertically()">Flip</button>
+            <button onclick="displayRange()" id="rota">
+               Rotate <input type="range" name="" id="rotate-change" value="0" min="0" max="360" onchange="rotate(this)">
+            </button>
+        </div>
+        <div class="buttons">
+            <button onclick="makeGrayScale()">Grayscale</button>
+            <button onclick="makeBright()">Brighter</button>
+            <button onclick="makeDark()">Darker</button>
+            <button onclick="makeBlur()">Blur</button>
+            <button onclick="makeEmboss()">Vignete</button>
+            <button onclick="makeSharp()">Sharp</button>
+
+            
+        </div>
+
+        <div class="buttons">
+           <input type="color" name="" id="color-picker" value="#000000" oninput="makeColorize(this)">
+                <button onclick="openColorPicker()">Colorize</button>
+
+
+                <input type="color" name="" id="colorize-color-picker" value="#000000" oninput="applyColorFilter(this)">
+                <button onclick="openColorizeColorPicker()">Color Filter</button>
+                
+        </div>
+        <div class="buttons">
+          
+                
+        </div>
+        <div class="buttons" id="transparent">
+            <button onclick="makeTransparent()">
+                <div class="color-preview"></div>
+            Transparent
+            </button>
+            
+            <button onclick="restoreOriginalImage()">Clear</button>
+        </div>
+    
+</div>
+
+    <div class="image">
+        <div class="text-blob">Image Editor</div>
+        <img id="foto-image" class="image" src="upload.png" alt="Upload the Image" >
+        <button id="download" onclick="download()">Download</button>
+    </div> 
+
+
+
+
+<script>
+    var foto;
+window.onload = function() {
+    foto = new  Foto();
+    
+}
+
+function selectImage(){
+    document.getElementById("foto-file").click();
+}
+function makeGrayScale()
+{
+    foto.grayscale();
+}
+function makeBright()
+{
+    foto.makeBright();
+}
+function makeDark()
+{
+    foto.makeDark();
+}
+function makeBlur()
+{
+    foto.applyBlurFilter();
+}
+function makeEmboss()
+{
+    foto.applyEmbossFilter();
+}
+function makeSharp()
+{
+    foto.applySharpFilter();
+}
+
+function download(){
+    foto.export();
+}
+
+function openColorPicker(){
+    document.getElementById("color-picker").click();
+}
+
+function makeColorize(elem){
+    var color = elem.value;
+    foto.colorize(color);
+}
+
+
+function openColorizeColorPicker(){
+    document.getElementById("colorize-color-picker").click();
+}
+
+function applyColorFilter(elem){
+    var color = elem.value;
+    foto.applyColorFilter(color);
+}
+
+function makeTransparent(){
+    foto.makeTransparent();
+}
+
+function crop(){
+    foto.cropSelected();
+}
+
+function flipVertically(){
+    foto.flipVertically();
+}
+
+function rotate(elem){
+    foto.rotate(elem.value);
+}
+
+function restoreOriginalImage() {
+    clearFilters();
+}
+
+</script>
+
+    <script src="script.js"></script>
+   <!-- <script src="foto.js"></script> -->
+   <script src="foto.min.js"></script>
+
+    <!-- <script src="https://rawcdn.githack.com/kousik19/foto.js/d604b02c69b6f037875bc4a3050b85d776dc4659/foto.js"></script> -->
+</body>
+</html>
